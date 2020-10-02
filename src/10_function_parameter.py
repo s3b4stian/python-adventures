@@ -314,9 +314,10 @@ a, b, c, d, e = l[0], list(l[1:-1]), l[-1][0], l[-1][1], list(l[-1][2:])
 print(a, b, c, d, e)
 
 
-#######
+######################################################
 # *args
-#######
+# scoop up as tuple, remaining of positional arguments
+######################################################
 
 ## * return a tuple not a list
 ## args parameter is a name conventions
@@ -380,11 +381,88 @@ def func4(a, b, c):
 func4(1, 2, 3)
 func4(1, c=3, b=2)
 
-## here d mus be passed as keyword parameter
-## *args define the end of positional parameters
+## here d is mandatory keyword parameter
+## *args define the end of positional parameters and
+## return a tuple with passed arguments
 def func5(a, b, *args, d):
     print(a, b, args, d)
 
 ## return: TypeError: func5() missing 1 required keyword-only argument: 'd' 
 ## func5(1, 2, 3, 4, 5)
-func5(1,2,3,4, d=5)
+func5(1, 2, 3, 4, d=5)
+
+## same thing
+def func6(*args, d):
+    print(args, d)
+
+func6(1, 2, 3, 4, d=5)
+
+## no positional arguments allowed
+## * indicates the end of positional parameters
+def func7(*, d):
+    print(d)
+
+### doesn't work, wrong
+#func7(5)
+#func7(5, d=4)
+func7(d=4)
+
+## positional parameters, max 2 and after a named parameter
+def func8(a, b, *, d):
+    print(a, b, d)
+
+### doesn't work, wrong
+#func8(1, 2, 3, d=4)
+#func8(1, 2, 4)
+func8(1, 2, d=4)
+
+## positional parameters with default value
+def func9(a, b=2, *args, d):
+    print(a, b, args, d)
+
+func9(1, 5, 7, 8, d=10)
+### parameter b now have default value
+func9(1, d=10)
+
+## positional parameters with default value for keyword parameter
+def func10(a, b=20, *args, d=0, e):
+    print(a, b, args, d, e)
+
+func10(5, 4, 3, 2, 1, e='go')
+func10(5, 4, 3, 2, 1, d='lets', e='go')
+
+
+#######################################################################
+# **kwargs
+# scoop up as dictionary, remaining of keyword arguments
+# can be specified even if positional arguments have not benn exhausted
+# no parameters after
+#######################################################################
+
+def func11(**kwargs):
+    print(kwargs)
+
+func11(a='pippo', b=0, c=1.1)
+
+## combining with *args
+def func12(*args, **kwargs):
+    print(args)
+    print(kwargs)
+
+func12(1, 2, a=3, b=4)
+
+## with positional parameters
+def func13(a, b, **kwargs):
+    print(a,b)
+    print(kwargs)
+
+func13(1, 2, x=3, y=4)
+
+## after named parameter
+#def func13(a, b, *, **kwargs): # not allowed because only named arguments must follow the *
+def func14(a, b, *, d, **kwargs):
+    print(a,b)
+    print(d)
+    print(kwargs)
+
+func14(1, 2, d=23, x=3, y=4)
