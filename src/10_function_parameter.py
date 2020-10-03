@@ -466,3 +466,55 @@ def func14(a, b, *, d, **kwargs):
     print(kwargs)
 
 func14(1, 2, d=23, x=3, y=4)
+
+
+######################
+# putting all togheter
+######################
+
+## two positional parameters a and b
+def p_func_0(a, b):
+    pass
+
+## two positional parameters a and b, b has default value and this make it optional
+def p_func_1(a, b=10):
+    pass
+
+## two positional parameters a and b plus the positional parameters' collector *args
+def p_func_2(a, b, *args):
+    pass
+
+## two positional parameters a and b, positional parameters' collector *args,
+## keyword parameters kw1 and kw2, kw2 is optional, kw1 mandatory
+def p_func_3(a, b, *args, kw1, kw2=100):
+    pass
+
+## two positional parameters a and b, positional parameters' end sign *,
+## keyword parameters kw1 and kw2, kw2 is optional, kw1 mandatory
+def p_func_4(a, b, *, kw1, kw2=100):
+    pass
+
+## two positional parameters a and b, positional parameters' collector *args,
+## keyword parameters kw1 and kw2, kw2 is optional, kw1 mandatory
+## keyword parameters' collector **kwargs
+def p_func_5(a, b, *args, kw1, kw2=100, **kwargs):
+    pass
+
+## two positional parameters a and b, positional parameters' end sign *,
+## keyword parameters kw1 and kw2, kw2 is optional, kw1 mandatory
+## keyword parameters' collector **kwargs
+def p_func_6(a, b, *, kw1, kw2=100, **kwargs):
+    pass
+
+## only positional parameters' collector
+def p_func_7(*args):
+    pass
+
+## only keyword parameters' collector
+def p_func_8(**kwargs):
+    pass
+
+## positional parameters' collector and keyword parameters' collector
+## accept arbitray number of both parameters' type
+def p_func_9(*args, **kwargs):
+    pass
