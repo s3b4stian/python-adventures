@@ -518,3 +518,208 @@ def p_func_8(**kwargs):
 ## accept arbitray number of both parameters' type
 def p_func_9(*args, **kwargs):
     pass
+
+
+#########################
+# a simple function timer
+#########################
+
+import time
+
+def time_it(fn, *args, rep=1, **kwargs):
+    start = time.perf_counter()
+    
+    for i in range(rep):
+        fn(*args, **kwargs)
+    end = time.perf_counter()
+    
+    return (end - start) / rep
+
+print(time_it(print, 1,2,3, sep=' - ', end=' ***\n', rep=5))
+
+def computer_powers_1(n, *, start = 1, end):
+    # using a for loop
+    result = []
+    for i in range(start, end):
+        result.append(n**i)
+
+    return result
+
+def computer_powers_2(n, *, start = 1, end):
+    # using a list comprehension
+    return [n**i for i in range(start, end)]
+
+
+def computer_powers_3(n, *, start = 1, end):
+    # using generators expression
+    return (n**i for i in range(start, end))
+
+
+print(computer_powers_1(2, end=5))
+print(computer_powers_2(2, end=5))
+print(list(computer_powers_3(2, end=5)))
+
+## now time functions
+print(time_it(computer_powers_1, 2, start=0, end=2000, rep=5))
+print(time_it(computer_powers_2, 2, start=0, end=2000, rep=5))
+## generator doesn't compute the content
+## fastest solution
+print(time_it(computer_powers_3, 2, start=0, end=2000, rep=5))
+
+
+############################
+# parameter default - beware
+############################
+
+from datetime import datetime
+
+print(datetime.utcnow())
+
+def log(msg, *, dt=datetime.utcnow()):
+    print(f"{dt} --> {msg}")
+
+## default value never change because created when script parsed
+## beware with mutable object as default values
+log("message 1", dt="2020-10-06 12:00:00.000000")
+log("message 2")
+log("message 3")
+log("message 4")
+log("message 5")
+
+## for fix this behavios
+def log_fixed(msg, *, dt=None):
+    dt = dt or datetime.utcnow()
+    print(f"{dt} --> {msg}")
+
+log_fixed("message 1", dt="2020-10-06 12:00:00.000000")
+log_fixed("message 2")
+log_fixed("message 3")
+log_fixed("message 4")
+log_fixed("message 5")
+
+## opposite problem
+my_list = [1,2,3]
+
+def print_my_list(a=my_list):
+    print(a)
+
+print_my_list()
+print_my_list(['a', 'b', 'c'])
+
+my_list.append(4)
+
+## value change because default param value is the reference for the list in memory
+print_my_list()
+
+## in this case the use of tuple is preferred because tuple desn't change
+
+
+##################################
+# parameter default - beware again
+##################################
+
+def add_item(name, quantity, unit, grocery_list):
+    grocery_list.append(f"{name} ({quantity} {unit})")
+    return grocery_list
+
+store1 = []
+store2 = []
+
+add_item('banana', 2, 'units', store1)
+add_item('milk', 1, 'liter', store1)
+
+add_item('python', 1, 'medium-rare', store2)
+
+print(store1)
+print(store2)
+
+## easier version
+## but doesn't work
+## because default created list is the same when we call functionwith default argument
+del store1
+del store2
+
+def add_item_easier(name, quantity, unit, grocery_list=[]):
+    grocery_list.append(f"{name} ({quantity} {unit})")
+    return grocery_list
+
+store1 = add_item_easier('banana', 2, 'units')
+add_item_easier('milk', 1, 'liter', store1)
+
+store2 = add_item_easier('python', 1, 'medium-rare')
+
+print(store1)
+## something doesn't work
+print(store2)
+print(store1 is store2)
+
+## solution
+del store1
+del store2
+
+def add_item_easier_work(name, quantity, unit, grocery_list=None):
+    ## check for None and create new list with a new reference in memory
+    grocery_list = grocery_list or []
+    grocery_list.append(f"{name} ({quantity} {unit})")
+    return grocery_list
+
+store1 = add_item_easier_work('banana', 2, 'units')
+add_item_easier_work('milk', 1, 'liter', store1)
+
+store2 = add_item_easier_work('python', 1, 'medium-rare')
+
+## all work well
+print(store1)
+print(store2)
+print(store1 is store2)
+
+## factorial
+def factorial(n):
+    if n < 1:
+        return 1
+    else:
+        print(f"calculating({n})!")
+        return n * factorial(n-1)
+
+print(factorial(5))
+print(factorial(5))
+
+## factorial cache
+## mandatory external cache dictionary
+cache = {}
+
+def factorial_cache(n, *, cache):
+    if n < 1:
+        return 1
+    elif n in cache:
+        print(f"returning cache({n})!")
+        return cache[n]
+    else:
+        print(f"calculating({n})!")
+        result =  n * factorial_cache(n-1, cache=cache)
+        cache[n] = result
+        return result
+
+print(cache)
+print(factorial_cache(5, cache=cache))
+print(cache)
+## no more calculation needed
+print(factorial_cache(5, cache=cache))
+
+## factorial cache with default dictionary
+
+def factorial_cache_default(n, *, cache = {}):
+    if n < 1:
+        return 1
+    elif n in cache:
+        print(f"returning cache({n})!")
+        return cache[n]
+    else:
+        print(f"calculating({n})!")
+        result =  n * factorial_cache_default(n-1)
+        cache[n] = result
+        return result
+
+print(factorial_cache_default(5))
+## no more calculation needed
+print(factorial_cache_default(5))
