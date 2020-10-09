@@ -446,3 +446,251 @@ print(result)
 ## same filter with comprehension and zip
 result = [x+y for x, y in zip(l1, l2) if (x+y) % 2 == 0]
 print(result)
+
+
+####################
+# reducing functions
+####################
+
+## our reduce function
+l = [5, 8, 6, 10, 9]
+
+## reducing condition
+_max = lambda x, y: x if x > y else y
+
+def max_sequence(sequence):
+    result = sequence[0]
+    for x in sequence[1:]:
+        result = _max(result, x)
+    return result
+
+print(max_sequence(l))
+
+_min = lambda x, y: x if x < y else y
+
+def min_sequence(sequence):
+    result = sequence[0]
+    for x in sequence[1:]:
+        result = _min(result, x)
+    return result
+
+print(min_sequence(l))
+
+_add = lambda x, y: x + y
+
+def add_sequence(sequence):
+    result = sequence[0]
+    for x in sequence[1:]:
+        result = _add(result, x)
+    return result
+
+print(add_sequence(l))
+
+## generic reduction function
+## works only with sequences that support indexing
+def _reduce(fn, sequence):
+    result = sequence[0]
+    for x in sequence[1:]:
+        result = fn(result, x)
+    return result
+
+print("-----")
+print(_reduce(_max, l))
+print(_reduce(_min, l))
+print(_reduce(_add, l))
+
+## built in recude function
+from functools import reduce
+
+print("-----")
+print(reduce(_max, l))
+print(reduce(_min, l))
+print(reduce(_add, l))
+
+print("-----")
+print(reduce(_max, [5, 8, 6, 10, 9])) # list, indexable
+print(reduce(_min, (5, 8, 6, 10, 9))) # tuple, indexable
+print(reduce(_add, {5, 8, 6, 10, 9})) # set, not indexable, also works well
+
+## built functions
+## also it supports indexable elements
+print("-----")
+print(min(l))
+print(max(l))
+print(sum(l))
+print(any(l))
+print(all(l))
+
+### any and all
+### any return true if at leat one element is true, like or
+### all return true if all alements are true, like and
+
+## all and any equivalent with reduce
+
+s1 = {10, 20, 30, 'a', 'b'}
+s2 = {10, 20, False, 'a', 'b'}
+s3 = {False, 0, '', None}
+
+### all like behavior
+print("-----")
+print(reduce(lambda a, b: bool(a) and bool(b), s1))
+print(reduce(lambda a, b: bool(a) and bool(b), s2))
+print(reduce(lambda a, b: bool(a) and bool(b), s3))
+### any like behavior
+print("-----")
+print(reduce(lambda a, b: bool(a) or bool(b), s1))
+print(reduce(lambda a, b: bool(a) or bool(b), s2))
+print(reduce(lambda a, b: bool(a) or bool(b), s3))
+
+## product of values
+## factorial function
+## 4! = 4 * 3 * 2 * 1
+l = [1, 2, 3, 4]
+print(reduce(lambda a, b: a * b, l))
+
+print(reduce(lambda a, b: a * b, range(1, 5+1)))
+
+### defined above
+### def fact(n):
+###     return 1 if n < 2 else n * fact(n-1)
+
+print(fact(4))
+print(fact(5))
+
+def fact1(n):
+    return reduce(lambda a, b: a * b, range(1, n+1))
+
+print(fact1(4))
+print(fact1(5))
+
+## reduce with initializer
+
+def _reduce1(fn, sequence, initial):
+    result = initial#sequence[0]
+    for x in sequence:
+        result = fn(result, x)
+    return result
+
+l = [1, 2, 3, 4]
+print(_reduce1(_add, l, 0))
+print(_reduce1(_add, l, 10))
+print(_reduce1(_add, l, 100))
+
+### rewrote with initializer, works also with not indexable sequences
+l = {1, 2, 3, 4}
+print(_reduce1(_add, l, 0))
+print(_reduce1(_add, l, 10))
+print(_reduce1(_add, l, 100))
+
+
+###################
+# partial functions
+###################
+
+## custom solution
+def my_func_6(a, b, c):
+    print(a, b, c)
+
+my_func_6(10, 20, 30)
+
+### reduction of my_func_6
+def f(x, y):
+    return my_func_6(5, x, y)
+
+f(50, 500)
+
+f1 = lambda x, y: my_func_6(10, x, y)
+f1(100, 1000)
+
+## built in partial function
+from functools import partial
+
+f2 = partial(my_func_6, 20)
+f2(200, 2000)
+
+### it is possible reduce more than one patameter
+### if f3 is called with more than one parameter, python return a type error
+### my_func_6 has originally three parameters
+f3 = partial(my_func_6, 30, 300)
+f3(3000)
+
+## reduction with various parameter
+def my_func_7(a, b, *args, k1, k2, **kwargs):
+    print(a, b, args, k1, k2, kwargs)
+
+my_func_7(10, 20, 100, 200, k1='a', k2='b', k3=1000, k4=2000)
+
+def f7_reduction(x, *vargs, kw, **kwvargs):
+    return my_func_7(10, x, *vargs, k1='a', k2=kw, **kwvargs)
+
+f7_reduction(20, 100, 200, kw='b', k3=1000, k4=2000) # same output of my_func_7
+
+f4 = partial(my_func_7, 10, k1='a')
+f4(20, 100, 200, k2='b', k3=1000, k4=2000) # same output of my_func_7
+
+## specific the parameter for reduction
+def pow(base, exponent):
+    return base**exponent
+
+sq = partial(pow, exponent=2)
+print(sq(5))
+
+cu = partial(pow, exponent=3)
+print(cu(5))
+print(cu(base=5))
+print(cu(5, exponent=2)) # works but bad practice
+
+## variable usage, be carefull
+a = 2
+sq = partial(pow, exponent=a)
+print(sq(5)) # 25
+
+a = 3
+print(sq(5)) # expected 125 but 25 returned
+### this happens because partial take the reference to the object
+### assign another value to a create another object in memory
+
+def my_func_8(a, b):
+    print(a, b)
+
+a = [1, 2]
+f5 = partial(my_func_8, a)
+f5(100) # [1, 2] 100
+
+a.append(3)
+f5(100) # [1, 2, 3] 100
+### it is only mutate the internal state of the same object, reference to list
+### is the same
+
+## applications examples
+
+### distance between two points
+origin = (0,0)
+l = [(1,1), (0,2), (-3,2), (0,0), (10,10)]
+
+dist2 = lambda a, b: (a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2
+print(dist2((1,1), origin)) # 2
+
+print(sorted(l)) # doesn't work well
+
+dist_from_origin = partial(dist2, origin)
+print(dist_from_origin((1,1))) # 2
+print(sorted(l, key=dist_from_origin)) # works well
+
+### another method
+
+dist_from_origin = lambda x: dist2(origin, x) # reduciton
+print(sorted(l, key=dist_from_origin)) # also works well
+
+### or
+print(sorted(l, key=lambda x: dist2(origin, x))) # also works well
+
+### or
+print(sorted(l, key=partial(dist2, origin))) # also works well
+
+
+########################
+# the operator module
+# operators as functions
+########################
+
