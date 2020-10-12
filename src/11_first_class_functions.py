@@ -689,8 +689,156 @@ print(sorted(l, key=lambda x: dist2(origin, x))) # also works well
 print(sorted(l, key=partial(dist2, origin))) # also works well
 
 
-########################
+###################################################
 # the operator module
 # operators as functions
-########################
+# https://docs.python.org/3.9/library/operator.html
+###################################################
+
+import operator
+from functools import reduce
+
+print(operator.add(1, 2))
+print(operator.mul(2, 3))
+print(operator.truediv(3, 2))
+print(operator.floordiv(13, 2))
+
+## avoid to write own functions
+print(reduce(lambda x,y: x*y, [1,2,3,4]))
+print(reduce(operator.mul, [1,2,3,4]))
+
+print(operator.lt(10, 3))
+print(operator.lt(3, 10))
+print(operator.is_('abc', 'def'))
+print(operator.is_('abc', 'abc'))
+
+print(operator.truth([]))
+print(operator.truth([1]))
+
+## get item with operator module
+my_list = [1,2,3,4]
+print(my_list[1])
+
+print(operator.getitem(my_list, 1))
+
+## set item with operator module
+my_list[1] = 100
+print(my_list[1])
+
+my_list = [1,2,3,4]
+operator.setitem(my_list, 1, 100)
+print(my_list)
+
+## del item with operator module
+my_list = [1,2,3,4]
+print(my_list)
+operator.delitem(my_list, 3)
+print(my_list)
+
+## item getter
+
+### f become function
+f = operator.itemgetter(2)
+
+### return the second element
+my_list = [1,2,3,4]
+print(f(my_list)) # 3
+
+### return the second element
+my_string = "python"
+print(f(my_string)) # t
+
+### complex section
+f = operator.itemgetter(2, 3)
+
+### return the second and the third element
+my_list = [1,2,3,4]
+print(f(my_list)) # (3,4)
+
+### return the second and the third element
+my_string = "python"
+print(f(my_string)) # (t,h)
+
+## retrive properties from a class
+class MyClass3:
+    def __init__(self):
+        self.a = 10
+        self.b = 20
+        self.c = 30
+    
+    def test(self):
+        print('test method running...')
+
+obj = MyClass3()
+print(obj.a)
+print(obj.b)
+print(obj.c)
+
+f = operator.attrgetter('a')
+print(f(obj)) # 10
+
+### var as argument
+### result doesn't change
+my_var = 'b'
+
+f = operator.attrgetter(my_var)
+print(f(obj)) # 20
+
+my_var = 'c'
+print(f(obj)) # 20
+
+## multiple things
+print(operator.attrgetter('a', 'b')(obj))
+
+a, b, test = operator.attrgetter('a', 'b', 'test')(obj)
+print(a, b)
+### test is a method and attrgetter return a callable
+test()
+
+### same thing using lambda function
+f= lambda x: x.a
+print(f(obj))
+
+## complex number
+a = 5 +10j
+print(a.real)
+
+l = [1-10j, 3+3j, 2-100j]
+### need callback because complex number doesn't have native sort
+print(sorted(l, key=lambda x: x.real))
+print(sorted(l, key=operator.attrgetter('real')))
+
+## list of tuples
+l = [(2, 3, 4), (1, 3, 5), (6,), (4, 100)]
+print(sorted(l, key=lambda x: x[0]))
+print(sorted(l, key=operator.itemgetter(0)))
+
+## extracting and use attribute getter
+class MyClass4:
+    def __init__(self):
+        self.a = 10
+        self.b = 20
+        self.c = 30
+    
+    def test(self, c, d, *, e):
+        print(f"test method running... self.a: {self.a}, self.b: {self.b}, param: {c}")
+
+obj = MyClass3()
+
+f = operator.attrgetter('test')
+print(f(obj))
+### print inside method
+f(obj)()
+
+f = operator.methodcaller('test')
+f(obj)
+
+obj = MyClass4()
+obj.test(100, 200, e=300)
+
+f = operator.methodcaller('test', 100, 200, e=300)
+f(obj)
+
+f = operator.attrgetter('test')
+f(obj)(100, 200, e=300)
 
