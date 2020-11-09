@@ -1085,3 +1085,597 @@ print(fibonacci_dec_lru(3))
 ###################
 
 ## how to parametrize a decorator
+## normal decorator
+def timed_1(fn):
+    from time import perf_counter
+
+    def inner(*args, **kwargs):
+        start = perf_counter()
+        result = fn(*args, **kwargs)
+        end = perf_counter()
+        elapsed = end - start
+        print(f"Run time: {elapsed:.6f}s")
+        return result
+    return inner
+
+
+def fibonacci_recursive_1(n):
+    #print(f"Calculating fibonacci_recursive_1({n})")
+    return 1 if n < 3 else fibonacci_recursive_1(n-1) + fibonacci_recursive_1(n-2)
+
+## using @ notation is equal to do
+## fibonacci_recursive_wrapper_1 = timed_1(fibonacci_recursive_wrapper_1)
+@timed_1
+def fibonacci_recursive_wrapper_1(n):
+    return fibonacci_recursive_1(n)
+
+print(fibonacci_recursive_wrapper_1(20))
+
+## timed that runs test n times
+def timed_3(fn, reps):
+    from time import perf_counter
+
+    def inner(*args, **kwargs):
+        total_elapsed = 0
+        for i in range(reps):
+            start = perf_counter()
+            result = fn(*args, **kwargs)
+            end = perf_counter()
+            total_elapsed += end - start
+        
+        average_run_time = total_elapsed / 10
+        print(f"Average run time: {average_run_time:.6f}s ({reps} reps)")
+        return result
+
+    return inner
+
+## @timed_3
+## decorating in this mode doesnt work
+## throw a TypeError
+def fibonacci_recursive_wrapper_2(n):
+    return fibonacci_recursive_1(n)
+
+## must use the other syntax
+fibonacci_recursive_wrapper_2 = timed_3(fibonacci_recursive_wrapper_2, 150)
+## calc fibonacci of number 10 and test run 15 times
+print(fibonacci_recursive_wrapper_2(10))
+
+## for solve previous problem need to create a decorator factory
+## general example
+def dec_factory():
+    print("Running dec_factory")
+    def dec(fn):
+        print("Running dec")
+        def inner(*args, **kwargs):
+            print ("Running inner")
+            return fn(*args, **kwargs)
+        
+        return inner
+    return dec
+
+def my_func_7():
+    print("Running my_func_7")
+
+## create decorator
+dec = dec_factory() # running dec factory
+## decorate function
+my_func_7 = dec(my_func_7)## running dec
+## call function
+my_func_7() ## running inner and my_func_7
+
+## or with standard syntax
+dec = dec_factory()
+
+@dec
+def my_func_8():
+    print("Running my_func_8")
+
+my_func_8()
+
+## --- IMPORTANT ----
+## it is possible call directly the decorator factory
+## using the function call operator
+## --- IMPORTANT ----
+
+@dec_factory() ## call the factory that return the decorator
+def my_func_9():
+    print("Running my_func_9")
+
+my_func_9()
+
+## decorating with factory is equal to
+def my_func_10():
+    print("Running my_func_10")
+
+my_func_10 = dec_factory()(my_func_10)
+my_func_10()
+
+## with decorator factory it is possible inject arguments to build
+## specific decorator
+def timed_factory(reps):
+    def timed(fn):
+        from time import perf_counter
+
+        def inner(*args, **kwargs):
+            total_elapsed = 0
+            for i in range(reps):
+                start = perf_counter()
+                result = fn(*args, **kwargs)
+                end = perf_counter()
+                total_elapsed += end - start
+            
+            average_run_time = total_elapsed / 10
+            print(f"Average run time: {average_run_time:.6f}s ({reps} reps)")
+            return result
+        return inner
+    return timed
+
+@timed_factory(100) ## return a decorator that runs 100 times
+def fibonacci_recursive_wrapper_3(n):
+    return fibonacci_recursive_1(n)
+
+@timed_factory(1000) ## return a decorator that runs 1000 times
+def fibonacci_recursive_wrapper_4(n):
+    return fibonacci_recursive_1(n)
+
+@timed_factory(10000) ## return a decorator that runs 10000 times
+def fibonacci_recursive_wrapper_5(n):
+    return fibonacci_recursive_1(n)
+
+print(fibonacci_recursive_wrapper_3(10))
+print(fibonacci_recursive_wrapper_4(10))
+print(fibonacci_recursive_wrapper_5(10))
+
+
+#################
+# decorator class
+#################
+
+## basic decorator factory
+def my_dec(a, b):
+    def dec(fn):
+        def inner(*args, **kwargs):
+            print(f"Decorated function called: a={a}, b={b}")
+            return fn(*args, **kwargs)
+        return inner
+    return dec
+
+@my_dec(10,20)
+def my_func_11(s):
+    print(f"Hello {s}")
+
+my_func_11("Python Decorator")
+
+## decorator as a class
+## class is the factory
+class MyClass:
+    def __init__(self, a, b):
+        self.a = a
+        self.b = b
+    
+    def __call__(self, fn):
+        def inner(*args, **kwargs):
+            print(f"Decorated function called: a={self.a}, b={self.b}")
+            return fn(*args, **kwargs)
+        return inner
+
+@MyClass(10,20)
+def my_func_12(s):
+    print(f"Hello {s}")
+
+my_func_12("Python Class Decorator")
+
+
+###########################################
+# decorator applicaziont -> decorator class
+###########################################
+
+from fractions import Fraction
+
+## a stupid example to modify classes at runtime
+## monkey patch Fraction class
+f = Fraction(2,3)
+print(f.denominator)
+print(f.numerator)
+
+Fraction.speak = lambda self, message: print(f"Fraction says: {message}")
+f.speak("This is a late parrot")
+
+Fraction.is_integral = lambda self: self.denominator == 1
+
+f1 = Fraction(2, 3)
+f2 = Fraction(64, 8)
+
+print(f1.is_integral())
+print(f2.is_integral())
+
+## decorating franction with function
+def decorator_speak(cls):
+    cls.speak = lambda self, message: print(f"{self.__class__.__name__} says: {message}")
+    return cls
+
+Fraction = decorator_speak(Fraction)
+
+f1 = Fraction(2, 3)
+f1.speak("I am decorated by function")
+
+class Person:
+    pass
+
+Person = decorator_speak(Person)
+
+p = Person()
+p.speak("I am a Person")
+
+from datetime import datetime, timezone
+
+def info(self):
+    results = []
+    results.append(f"time: {datetime.now(timezone.utc)}")
+    results.append(f"class: {self.__class__.__name__}")
+    results.append(f"id: {hex(id(self))}")
+    for k,v in vars(self).items():
+        results.append(f"{k}: {v}")
+    return results
+
+def debug_info(cls):
+    cls.debug = info
+    return cls
+
+## decorate with decorator syntax
+@debug_info
+class Person_1:
+    def __init__(self, name, birth_year):
+        self.name = name
+        self.birth_year = birth_year
+
+    def say_hi(self):
+        return f"{self.name} says Hello there!"
+
+p = Person_1('John', 1939)
+print(p.debug())
+
+@debug_info
+class Automobile:
+    def __init__(self, make: str, model: str, year: int, top_speed: int):
+        self.make = make
+        self.model = model
+        self.year = year
+        self.top_speed = top_speed
+        self._speed = 0
+    
+    @property
+    def speed(self):
+        return self._speed
+
+    @speed.setter
+    def speed(self, new_speed: int):
+        if new_speed > self.top_speed:
+            raise ValueError("Speed cannot exeed top_speed.")
+        else:
+            self._speed = new_speed
+
+favorite = Automobile("Ford", "Model T", 1908, 45)
+print(favorite.debug())
+favorite.speed = 40
+print(favorite.debug())
+
+
+## decorate a class another example
+from math import sqrt
+
+class Point:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+    
+    def __abs__(self):
+        return sqrt(self.x **2 + self.y **2)
+
+    def __repr__(self):
+        return f"Point({self.x}, {self.y})"
+    
+    def __eq__(self, other):
+        if isinstance(other, Point):
+            return self.x == other.x and self.y == other.y
+        else:
+            return False
+    
+    def __lt__(self, other):
+        if isinstance(other, Point):
+            return abs(self) < abs(other)
+        else:
+            return False
+
+
+p1, p2, p3, p4 = Point(2,3), Point(2,3), Point(0,0), Point(10,10)
+
+print(abs(p1))
+print(p1 is p2)
+print(p2 is p3)
+print(p1 == p2)
+print(p3 < p1)
+print(p4 > p1)
+print(p1 < p4)
+
+del Point
+
+## a <= b iff a < b or a == b
+## a > b  iff not(a < b) and a != b
+## a >= b iff not (a < b) 
+
+## do not considerate this good python, only to explain pourpose
+def complete_ordering(cls):
+    if '__eq__' in dir(cls) and '__lt__' in dir(cls):
+        cls.__le__ = lambda self, other: self < other or self == other
+        cls.__gt__ = lambda self, other: not(self < other) and not(self == other)
+        cls.__ge__ = lambda self, other: not(self < other)
+    return cls
+
+@complete_ordering
+class Point:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+    
+    def __abs__(self):
+        return sqrt(self.x **2 + self.y **2)
+
+    def __repr__(self):
+        return f"Point({self.x}, {self.y})"
+    
+    def __eq__(self, other):
+        if isinstance(other, Point):
+            return self.x == other.x and self.y == other.y
+        else:
+            return False
+    
+    def __lt__(self, other):
+        if isinstance(other, Point):
+            return abs(self) < abs(other)
+        else:
+            return False
+
+p1, p2, p3, p4 = Point(2,3), Point(2,3), Point(0,0), Point(10,10)
+
+print(abs(p1))
+print(p1 is p2)
+print(p2 is p3)
+print(p1 == p2)
+print(p3 < p1)
+print(p4 > p1)
+print(p1 < p4)
+print(p1 <= p4)
+print(p4 >= p2)
+
+## it is possible to obtain the same result with
+## the functools decorator
+## from functools import total_ordering
+
+
+############################################################
+# decorator application -> single dispatch generic functions
+############################################################
+
+from html import escape
+from decimal import Decimal
+
+def html_escape(arg):
+    return escape(str(arg))
+
+def html_int(a):
+    return f"{a}(<i>{str(hex(a))}</i>)"
+
+def html_real(a):
+    return f"{round(a):.2f}"
+
+def html_str(s):
+    return html_escape(s).replace("\n", "<br />\n")
+
+def html_list(l):
+    items = (f"<li>{html_escape(item)}</li>" for item in l)
+    return "<ul>\n" + "\n".join(items) + "\n<ul>"
+
+def html_dict(d):
+    items = (f"<li>{html_escape(k)}={html_escape(v)}</li>" for k, v in d.items())
+    return "<ul>\n" + "\n".join(items) + "\n<ul>"
+
+## ex usage
+print(html_str("""this is
+a multi line string
+with special characters: 10 < 100"""))
+
+print(html_int(40))
+
+def htmlize(arg):
+    if isinstance(arg, int):
+        return html_int(arg)
+    elif isinstance(arg, float) or isinstance(arg, Decimal):
+        return html_real(arg)
+    elif isinstance(arg, str):
+        return html_str(arg)
+    elif isinstance(arg, list) or isinstance(arg, tuple):
+        return html_list(arg)
+    elif isinstance(arg, dict):
+        return html_dict(arg)
+    elif isinstance(arg, set):
+        return html_set(arg)
+    else:
+        return html_escape(arg)
+
+## all works fine
+print(htmlize(100))
+print(htmlize("""Python
+rocks!
+"""))
+print(htmlize([1,2,3,4,5]))
+
+## but there is a problem if is passed argument like below
+print(htmlize(["""Python
+Rocks! 0<1
+""", (10,20,30), 100]))
+## for fix need to call htmlize inside html_list
+del html_list
+del html_dict
+
+def html_list(l):
+    items = (f"<li>{htmlize(item)}</li>" for item in l)
+    return "<ul>\n" + "\n".join(items) + "\n<ul>"
+
+def html_dict(d):
+    items = (f"<li>{html_escape(k)}={htmlize(v)}</li>" for k, v in d.items())
+    return "<ul>\n" + "\n".join(items) + "\n<ul>"
+
+def html_set(arg):
+    return html_list(arg)
+
+## now should run correctly
+print(htmlize(["""Python
+Rocks! 0<1
+""", (10,20,30), 100]))
+
+print(htmlize({1,2,3}))
+
+## a better apporach to htmlize
+del htmlize
+
+def htmlize(arg):
+    registry = {
+        object: html_escape,
+        int: html_int,
+        float: html_real,
+        Decimal: html_real,
+        str: html_str,
+        list: html_list,
+        tuple: html_list,
+        set: html_set,
+        dict: html_dict
+    }
+
+    ## get from registry the key corresponding the type of
+    ## the argument, if not found, return object key
+    fn = registry.get(type(arg), registry[object])
+    return fn(arg)
+
+## all works fine
+print(htmlize(100))
+print(htmlize("""Python
+rocks!
+"""))
+print(htmlize([1,2,3,4,5]))
+
+## rewrite all in more general term, without hardcoded registry
+del htmlize
+del html_int
+del html_list
+
+## decorator
+def singledispatch(fn):
+    registry = {}
+    ## default function
+    registry[object] = fn
+    
+    ## decorated function
+    ## geth te functino from registry and call it
+    def decorated(arg):
+        return registry.get(type(arg), registry[object])(arg)
+
+    ## decorator factory
+    ## use decorator only for populate registry
+    def register(type_):
+        def inner(fn):
+            registry[type_] = fn
+            return fn
+        return inner
+
+    ## return the function in the registry associated to the type
+    def dispatch(type_):
+        return registry.get(type_, registry[object])
+
+    ## create a new property for the decorated function
+    ## assign the function that expand the registry
+    decorated.register = register
+    
+    ## permit the access to the content of the registry
+    ## decorated.registry = registry
+
+    ## return the function in the registry associated to the type
+    decorated.dispatch = dispatch
+
+    return decorated
+
+## become singledispatch.decorated
+## htmlize gain the property register
+## that is a function
+## htmlize -> singledispatch.decorated
+@singledispatch
+def htmlize(arg):
+    return escape(str(arg))
+
+## become singledispatch.register
+## a decorator factory that expand the register
+## before return the function
+## same to
+## html_int = htmlize.register(int)(html_int)
+@htmlize.register(int)
+def html_int(a):
+    return f"{a}(<i>{str(hex(a))}</i>)"
+
+## it is possible stack decorators
+## decorator doesnt change the original funciton in this case
+@htmlize.register(tuple)
+@htmlize.register(list)
+def html_list(l):
+    items = (f"<li>{htmlize(item)}</li>" for item in l)
+    return "<ul>\n" + "\n".join(items) + "\n<ul>"
+
+
+print(htmlize(100))
+print(htmlize([1,2,3]))
+print(htmlize((1,2,3)))
+#print(htmlize.registry)
+print(htmlize.dispatch(int))
+
+## use singledispatch from standard library
+## it works well with instances of classes
+## pervious exampe works with data types
+del singledispatch
+del htmlize
+
+from functools import singledispatch
+from numbers import Integral
+from collections.abc import Sequence
+
+@singledispatch
+def htmlize(arg):
+    return escape(str(arg))
+
+@htmlize.register(Integral)
+def htmlize_integral_number(a):
+    return f"{a}(<i>{str(hex(a))}</i>)"
+
+@htmlize.register(Sequence)
+def htmlize_sequence(l):
+    items = (f"<li>{htmlize(item)}</li>" for item in l)
+    return "<ul>\n" + "\n".join(items) + "\n<ul>"
+
+@htmlize.register(str)
+def htmlize_str(s):
+    return html_escape(s).replace("\n", "<br />\n")
+
+print(htmlize(10))
+print(htmlize(True))
+print(htmlize([1,2,3]))
+print(htmlize((1,2,3)))
+## this is also a sequence, but there is the str type
+## registered and python handle it as string
+print(htmlize("python"))
+
+@htmlize.register(tuple)
+def htmlize_tuple(t):
+    items = (escape(str(item)) for item in t)
+    return "tuple(" + ", ".join(items) + ")"
+
+## now a tuple use the function writtef specifically 
+## to handle the tuple
+print(htmlize((1,2,3)))
