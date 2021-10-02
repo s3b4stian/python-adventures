@@ -16,11 +16,11 @@
 def scontato(importo, sconto):
     return importo - (importo * sconto / 100)
 
-# ex 2
+# ex. 2
 def secondi(ore: int, minuti: int, secondi: int) -> int :
     return secondi + (minuti * 60) + (ore * 3600)
 
-# ex 3
+# ex. 3
 def invest(capitale, interesse, anni):
     return int(capitale * (1+interesse/100)**anni)
 

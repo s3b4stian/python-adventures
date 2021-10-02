@@ -22,14 +22,14 @@ def media(vals: list):
         sum += n
     return sum / len(vals)
 
-# ex 2
+# ex. 2
 def space(s: str, k: int) -> str:
     final = ''
     for n in s:
         final = final + n + (' ' * k)
     return final
 
-# ex 3
+# ex. 3
 def crossing_over(l1: list, l2: list) -> list:
     # length check
     if len(l1) != len(l2):
