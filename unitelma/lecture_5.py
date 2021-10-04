@@ -98,7 +98,6 @@ def groupd(lst: list) -> list:
     return final
 
 
-
 if __name__ == '__main__':
     # ex 1 test
     lst = ['red','blue','red','gray','yellow','red']
