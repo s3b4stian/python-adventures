@@ -95,7 +95,7 @@ def groupd(lst: list) -> list:
         if count == iterate:
             break
     
-    return final
+    lst[:] = final
 
 
 if __name__ == '__main__':
@@ -116,4 +116,5 @@ if __name__ == '__main__':
 
     #ex 4 test
     lst = [1, 2, 2013, 23, 9, 2011, 10, 11, 2000]
-    print(groupd(lst)) # print ['1/2/2013', '23/9/2011', '10/11/2000']
+    groupd(lst)
+    print(lst) # print ['1/2/2013', '23/9/2011', '10/11/2000']
