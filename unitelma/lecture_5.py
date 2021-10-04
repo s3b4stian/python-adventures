@@ -88,10 +88,10 @@ def groupd(lst: list) -> list:
         el1 = lst[count * 3 + 0]
         el2 = lst[count * 3 + 1]
         el3 = lst[count * 3 + 2]
-        count += 1
 
         final.append(f"{el1}/{el2}/{el3}")
 
+        count += 1
         if count == iterate:
             break
     
