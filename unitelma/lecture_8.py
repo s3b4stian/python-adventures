@@ -83,7 +83,7 @@ def aggiorna_K_massimi_binary(massimi: list, V: int, K: int):
 
     start = 0
     end = K - 1
-    while start <= end
+    while start <= end:
         med = (start + end) // 2
         if massimi[med] == V:
             massimi.insert(med, V)
