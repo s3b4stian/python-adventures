@@ -77,16 +77,6 @@ def leetv(line):
     # return the tuple
     return (final, count)
 
-
-    # ------------------------------------------
-    # INSERISCI QUI IL CODICE DELLA FUNZIONE
-    # studiatevi help(str) per capire se qualcosa aiuta
-    # potete usare piu funzioni e comporle per spezzare
-    # il codice in sottoproblemi se necessario
-    # ------------------------------------------
-    pass
-
-
 if __name__ == '__main__':
     # Valutazione
     tests = [('My name is Neo', ('mY_N4m3_15_N30', 12),),
