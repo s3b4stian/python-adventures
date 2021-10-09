@@ -67,7 +67,7 @@ def leetv(line):
         # find the position of the current char
         i = str_normal.find(c)
         # if i greater than -1 then need to replace the char
-        # if the char is not equal in both char list
+        # if the char is not equal in both char lists
         if i >= 0 and str_normal[i] != str_leetv[i]:
             count += 1
             c = str_leetv[i]
