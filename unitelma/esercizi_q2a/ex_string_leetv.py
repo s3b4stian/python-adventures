@@ -38,31 +38,36 @@ Per creare la stringa usare le seguenti regole:
 #          ('What is the Matrix?',        ('Wh4t_15_th3_m4tR1X?', 12))]
 # ----------------------------------------------------------------------- #
 
-
-def leetv(line):
-    # string translation
+# first version
+def leetv_1(line):    
     str_normal = "abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     str_leetv =  "4bcd3F9h1jkLmN0pqR5tuvWXY7_4bcd3F9h1jkLmN0pqR5tuvWXY7"
 
     final = ''
     count = 0
+    for c in line:
+        # find position of the current char
+        i = str_normal.find(c)
+        # check if the char is in the translation charset
+        # if find(c) success returns the position else -1
+        if i < 0:
+            final += c
+            continue
+        # translate the char
+        final += str_leetv[i]
+        # check if translation really happens and count it
+        if str_normal[i] != str_leetv[i]:
+            count += 1
+    # return the tuple
+    return (final, count)
 
-    # first version
-    #for c in line:
-    #    # find position of the current char
-    #    i = str_normal.find(c)
-    #    # check if the char is in the translation charset
-    #    # if find(c) success returns the position else -1
-    #    if i < 0:
-    #        final += c
-    #        continue
-    #    # translate the char
-    #    final += str_leetv[i]
-    #    # check if translation really happens and count it
-    #    if str_normal[i] != str_leetv[i]:
-    #        count += 1
-    
-    # more concise version
+# more concise version
+def leetv_2(line):
+    str_normal = "abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    str_leetv =  "4bcd3F9h1jkLmN0pqR5tuvWXY7_4bcd3F9h1jkLmN0pqR5tuvWXY7"
+
+    final = ''
+    count = 0
     for c in line:
         # find the position of the current char
         i = str_normal.find(c)
@@ -73,9 +78,16 @@ def leetv(line):
             c = str_leetv[i]
 
         final += c
-
     # return the tuple
     return (final, count)
+
+# translate version
+# less code worst performance??????
+def leetv(line):
+    # brain explosion edition
+    tmp = line.translate(line.maketrans("abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ","4bcd3F9h1jkLmN0pqR5tuvWXY7_4bcd3F9h1jkLmN0pqR5tuvWXY7"))
+    # return the tuple
+    return (tmp, len(line) - len([line[i] for i in range(len(tmp)) if tmp[i] == line[i]]))
 
 if __name__ == '__main__':
     # Valutazione
