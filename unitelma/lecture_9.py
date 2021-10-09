@@ -145,7 +145,16 @@ def log_update(filelog: str, evento: str):
 # ex. 5
 import requests
 def findurl(lista_url: list, s: str, k: int) -> list:
-    pass
+    
+    final = []
+
+    for url in lista_url:    
+        r = requests.get(url=url)
+        if r.text.count(s) >= k:
+            final.append(url)
+
+    return final
+
 
 if __name__ == '__main__':
     # ex 1 test
@@ -160,25 +169,31 @@ if __name__ == '__main__':
     print(anagrams('files/alice.txt', 'elbow')) # print ['elbow', 'below']
 
     # ex 4 test
-    # delete  he file if exists
+    ## delete  he file if exists
     import os
     filename = 'files/log.log'
 
     if os.path.exists(filename):
         os.unlink(filename)
 
-    # write first batch of logs
+    ## write first batch of logs
     log_update(filename, 'inzio del log')
     log_update(filename, 'seconda riga del log')
     log_update(filename, 'terza riga del log')
 
-    # sleep
-    time.sleep(4)
+    ## sleep
+    #time.sleep(4)
 
-    # write next batch of logs
+    ## write next batch of logs
     log_update(filename, 'quarta riga del log')
     log_update(filename, 'quinta riga del log')
 
-    # check the log
+    ## check the log
     with open(filename) as f:
         print(f.read())
+
+    # ex 5 test
+    urls = ['http://python.org', 'http://google.com', 'http://docs.python.org/2.7/index.html', 'http://pellacini.di.uniroma1.it/teaching/fondamenti13/index.html']
+    print(findurl(urls, 'Python', 2)) # print ['http://python.org', 'http://docs.python.org/2.7/index.html', 'http://pellacini.di.uniroma1.it/teaching/fondamenti13/index.html'] 
+    print(findurl(urls, 'Python', 7)) # print ['http://python.org', 'http://docs.python.org/2.7/index.html']
+    print(findurl(urls, 'Python', 50)) # print ['http://python.org']
