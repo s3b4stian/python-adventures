@@ -47,19 +47,33 @@ def leetv(line):
     final = ''
     count = 0
 
+    # first version
+    #for c in line:
+    #    # find position of the current char
+    #    i = str_normal.find(c)
+    #    # check if the char is in the translation charset
+    #    # if find(c) success returns the position else -1
+    #    if i < 0:
+    #        final += c
+    #        continue
+    #    # translate the char
+    #    final += str_leetv[i]
+    #    # check if translation really happens and count it
+    #    if str_normal[i] != str_leetv[i]:
+    #        count += 1
+    
+    # more concise version
     for c in line:
-        # find position of the current char
-        pos = str_normal.find(c)
-        # check if the char is in the translation charset
-        if pos < 0:
-            final += c
-        else:
-            # translate the char
-            final += str_leetv[pos]
-            # check if translation really happens and count it
-            if str_normal[pos] != str_leetv[pos]:
-                count += 1
-            
+        # find the position of the current char
+        i = str_normal.find(c)
+        # if i greater than -1 then need to replace the char
+        # if the char is not equal in both char list
+        if i >= 0 and str_normal[i] != str_leetv[i]:
+            count += 1
+            c = str_leetv[i]
+
+        final += c
+
     # return the tuple
     return (final, count)
 
