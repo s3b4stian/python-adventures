@@ -97,6 +97,7 @@ def aggiorna_K_massimi_binary(massimi: list, V: int, K: int):
     massimi.insert(start, V)
     massimi.pop()
 
+
 if __name__ == '__main__':
     # ex 1 test
     import time
