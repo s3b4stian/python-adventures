@@ -81,6 +81,25 @@ def leetv_2(line):
     # return the tuple
     return (final, count)
 
+# more concise version, translation list reduced
+def leetv_3(line):
+    str_normal = "aefgilnorswxyz ABCDEGHIJKMOPQSTUVZ"
+    str_leetv =  "43F91LN0R5WXY7_4bcd39h1jkm0pq5tuv7"
+
+    final = ''
+    count = 0
+    for c in line:
+        # find the position of the current char
+        i = str_normal.find(c)
+        # if i greater than -1 then need to replace the char
+        if i >= 0:
+            count += 1
+            c = str_leetv[i]
+
+        final += c
+    # return the tuple
+    return (final, count)
+
 # translate version
 # less code worst performance??????
 def leetv(line):
