@@ -54,23 +54,23 @@ def words(text: str) -> list:
 
 # ex. 1
 def wset(fname: str) -> set:
-    with open(fname, encoding='utf8') as f:
+    with open(fname, encoding='utf-8-sig') as f:
         # create a list of unique words in text using a set
         return set(words(f.read()))
 
 # ex. 2
 def wsub(fn1: str, fn2: str) -> set:
     # open first file
-    with open(fn1, encoding='utf8') as f1:
+    with open(fn1, encoding='utf-8-sig') as f1:
         # open second file
-        with open(fn2, encoding='utf8') as f2:
+        with open(fn2, encoding='utf-8-sig') as f2:
             # return the difference between two sets
             return set(words(f1.read())) - set(words(f2.read()))
 
 # ex. 3
 # first version
 def wdict(fname: str) -> dict:
-    with open(fname, encoding='utf8') as f:
+    with open(fname, encoding='utf-8-sig') as f:
         list_sorted = sorted(words(f.read()))
     
     final = {}
@@ -90,7 +90,7 @@ def wdict(fname: str) -> dict:
 
 # more concise version
 def wdict_1(fname: str) -> dict:
-    with open(fname, encoding='utf8') as f:
+    with open(fname, encoding='utf-8-sig') as f:
         list_sorted = sorted(words(f.read()))
 
     # starting condition
@@ -111,7 +111,7 @@ def wdict_1(fname: str) -> dict:
 
 # ex. 4
 def nextw(fname: str) -> dict:
-    with open(fname, encoding='utf8') as f:
+    with open(fname, encoding='utf-8-sig') as f:
         list_words = words(f.read())
 
     final = {}
@@ -154,6 +154,6 @@ if __name__ == '__main__':
     print(d['write']) # print {'that', 'this', 'it', 'one', 'with', 'out'}
 
     # ex 5 test
-    print(mostf('holmes.txt', 7)) # print {'nothing', 'however'}
-    print(mostf('holmes.txt', 8)) # print {'sherlock'}
-    print(mostf('frankenstein.txt', 16)) # print {'unenforceability', 'impracticability', 'perpendicularity', 'indiscriminately', 'inextinguishable'}
+    print(mostf('files/holmes.txt', 7)) # print {'nothing', 'however'}
+    print(mostf('files/holmes.txt', 8)) # print {'sherlock'}
+    print(mostf('files/frankenstein.txt', 16)) # print {'unenforceability', 'impracticability', 'perpendicularity', 'indiscriminately', 'inextinguishable'}
