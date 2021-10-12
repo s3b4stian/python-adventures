@@ -102,7 +102,7 @@ def anagrams(fname: str, w: str) -> list:
     # return a list of all words in text
     # all words are converted in lowercase for
     # further comparation
-    def words(text : str) -> list:
+    def words(text: str) -> list:
         final = ''
         for c in text:
             if c.isalpha() or c.isspace():

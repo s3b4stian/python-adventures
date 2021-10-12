@@ -17,7 +17,7 @@ def scontato(importo, sconto):
     return importo - (importo * sconto / 100)
 
 # ex. 2
-def secondi(ore: int, minuti: int, secondi: int) -> int :
+def secondi(ore: int, minuti: int, secondi: int) -> int:
     return secondi + (minuti * 60) + (ore * 3600)
 
 # ex. 3
