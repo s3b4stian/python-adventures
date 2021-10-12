@@ -100,7 +100,7 @@ def wdict_1(fname: str) -> dict:
     for i in list_sorted:
         # every time the key change
         # remember the ordered list?
-        # set new current and initializa in with zero
+        # set new current and initialize final[i] with zero
         if i != current:
             current = i
             final[i] = 0
