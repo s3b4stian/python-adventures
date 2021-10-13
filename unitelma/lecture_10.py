@@ -129,9 +129,32 @@ def nextw(fname: str) -> dict:
 
 
 # ex. 5
-def mostf(fname, l):
-    # to be continued
-    pass
+# "a braccio" version
+# reuse wdict_1 function to get the occurrences of a word in a text
+def mostf(fname: str, l: int) -> set:
+    # retrieve the dict of occurrences
+    # should perform in O(N)
+    d_wdict_1 = wdict_1(fname)
+    # initial values
+    max_words = set()
+    max_freq = 0
+    # for every key in dict, and every key is a word of the text
+    # should perform in O(N)
+    for key in d_wdict_1:
+        # check the len of the word
+        if len(key) == l:
+            # the word has a frequency greather than the previous max frequency
+            if d_wdict_1[key] > max_freq:
+                # set new frequency
+                max_freq = d_wdict_1[key]
+                # reset the word set
+                max_words = set([key])
+                continue
+            # the word has a frequency equal to max. add it to the set
+            if d_wdict_1[key] == max_freq:
+                max_words.add(key)
+
+    return max_words
 
 
 if __name__ == '__main__':
