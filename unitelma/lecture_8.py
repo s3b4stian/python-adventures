@@ -49,11 +49,21 @@ def aggiorna_K_massimi_my(massimi: list, V: int, K: int):
     '''aggiorna i K massimi aggiungendo un nuovo valore V'''
     if len(massimi) < K:                    # se massimi contiene meno di K valori
         massimi.append(V)                   # aggiungiamo V
+        
+        # sort in reverse order the maximum list
+        if len(massimi) == K -1 : 
+            massimi.sort(reverse=True)
+        
         return                              # e usciamo
     
+    # updated 2021-10-16
+    # sort every time not needed,
+    # sort only when the list "massimi" is filled
+    # and when a number is greather than the the min of the "massimi"
+    #
     # sort in reverse order the maximum list
-    massimi.sort(reverse=True)
-    
+    #massimi.sort(reverse=True)
+
     if massimi[K - 1] < V:
         massimi[K - 1] = V
         massimi.sort(reverse=True)
@@ -153,11 +163,6 @@ if __name__ == '__main__':
     k_massimi_casuali_binary(0, 1000000, 3000)
     print("k_massimi_casuali_binary(0, 1000000, 3000) -> %s seconds" % (time.time() - start_time))
 
-    #using an ordered list to retrieve the max numbers
-    #make the function about twice fast than search the minimum
-    #when the number of max retrieved grows
-    #using a binary insert is about 20 times faster than the ordered list in the 3000 max test
-
     #python3 lecture_8.py
     #k_massimi_casuali_prof(0, 1000000, 3) -> 1.246842622756958 seconds
     #k_massimi_casuali_prof(0, 1000000, 30) -> 1.6349496841430664 seconds
@@ -171,3 +176,18 @@ if __name__ == '__main__':
     #k_massimi_casuali_binary(0, 1000000, 30) -> 1.1237034797668457 seconds
     #k_massimi_casuali_binary(0, 1000000, 300) -> 1.1618597507476807 seconds
     #k_massimi_casuali_binary(0, 1000000, 3000) -> 1.280822992324829 seconds
+
+    # updated 2021-10-16
+    #python3 lecture_8.py
+    #k_massimi_casuali_prof(0, 1000000, 3) -> 1.3435778617858887 seconds
+    #k_massimi_casuali_prof(0, 1000000, 30) -> 1.7178945541381836 seconds
+    #k_massimi_casuali_prof(0, 1000000, 300) -> 5.232067108154297 seconds
+    #k_massimi_casuali_prof(0, 1000000, 3000) -> 47.043272733688354 seconds
+    #k_massimi_casuali_my(0, 1000000, 3) -> 1.2666878700256348 seconds
+    #k_massimi_casuali_my(0, 1000000, 30) -> 1.2948362827301025 seconds
+    #k_massimi_casuali_my(0, 1000000, 300) -> 1.2701592445373535 seconds
+    #k_massimi_casuali_my(0, 1000000, 3000) -> 1.7441291809082031 seconds
+    #k_massimi_casuali_binary(0, 1000000, 3) -> 1.2009193897247314 seconds
+    #k_massimi_casuali_binary(0, 1000000, 30) -> 1.227834939956665 seconds
+    #k_massimi_casuali_binary(0, 1000000, 300) -> 1.2440893650054932 seconds
+    #k_massimi_casuali_binary(0, 1000000, 3000) -> 1.4425880908966064 seconds
