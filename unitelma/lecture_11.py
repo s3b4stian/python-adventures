@@ -149,8 +149,8 @@ def draw_grid(img, s, c):
             break
 
 
-# doesn't work in with python 3.9
-# tested succesfuly using Spyder 4.2.5 using Python 3.8
+# doesn't work in python 3.9
+# tested succesfuly using Spyder 4.2.5 and Python 3.8 on windows 10
 if __name__ == '__main__':
 
     # ex 1 test
