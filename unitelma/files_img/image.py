@@ -1,4 +1,4 @@
-import png
+from . import png
 import random
 import math
 import io

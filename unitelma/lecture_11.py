@@ -84,6 +84,7 @@
 #
 ################################################################################
 
+from files_img import image as im
 
 # ex. 1
 def size(ll: list) -> tuple:
@@ -98,29 +99,64 @@ def size(ll: list) -> tuple:
     return  len(ll), min(ll_len), max(ll_len), sum(ll_len)
 
 # ex. 2
-def draw_h_line(img, x, y, w, c):
-    pass
+def draw_h_line(img: list, x: int, y: int , w: int, c: tuple):
+    for i in range(w+1):
+        # draw only if the point is inside the image
+        if im.inside(img, x + i, y):
+            img[y][x + i] = c
 
 # ex. 3
-def draw_v_line(img, x, y, h, c):
-    pass
+def draw_v_line(img: list, x: int, y: int , h: int, c: tuple):
+    for i in range(h+1):
+        # draw only if the point is inside the image
+        if im.inside(img, x, y + i):
+            img[y + i][x] = c
 
 # ex. 4
-def draw_quad_out(img, x1, y1, x2, y2, c):
-    pass
+def draw_quad_out(img: list, x1: int, y1: int, x2: int, y2: int, c: tuple):
+    # obtain width and height of the image
+    w = x2 - x1
+    h = y2 - y1
+
+    # draw horizontal and vertical lines
+    draw_h_line(img, x1, y1, w, c)
+    draw_h_line(img, x1, y2, w, c)
+    draw_v_line(img, x1, y1, h, c)
+    draw_v_line(img, x2, y1, h, c)
+
 
 # ex. 5
 def draw_grid(img, s, c):
-    pass
+    # image limits
+    x_px = len(img[0])
+    y_px = len(img)
+    
+    l = 0
+    while True:
+        # draw orizontal lines
+        # starting from left side of the image to the right
+        draw_h_line(img, 0, l, x_px, c)
+        l += s
+        if l > x_px:
+            break
+    l = 0
+    while True:
+        # draw vertical lines
+        # starting from left side of the image to the right
+        draw_v_line(img, l, 0, y_px, c)
+        l += s
+        if l > x_px:
+            break
 
 
+# doesn't work in with python 3.9
+# tested succesfuly using Spyder 4.2.5 using Python 3.8
 if __name__ == '__main__':
 
     # ex 1 test
     print(size([[1,2,3],['a','b'],[1,2,'A',4,5]])) # print (3, 2, 5, 10)
 
     # ex 2 test
-    from files_img import image as im
     img = im.create(500,150,(0,255,0))
     draw_h_line(img, 100, 50,  300, (255, 0, 0) )
     draw_h_line(img,  50, 100, 700, (0, 0, 255) )
