@@ -185,25 +185,25 @@ def is_edge(img, y, x, t):
 
     # get pixels around
     p       = img[y][x]
-    p_N     = img[y - 1][x]
-    p_NE    = img[y - 1][x + 1]
-    p_NW    = img[y - 1][x - 1]
-    p_E     = img[y][x + 1]
-    p_W     = img[y][x - 1]
-    p_S     = img[y + 1][x]
-    p_SW    = img[y + 1][x - 1]
-    p_SE    = img[y + 1][x + 1]
+    # p_N     = img[y - 1][x]
+    # p_NE    = img[y - 1][x + 1]
+    # p_NW    = img[y - 1][x - 1]
+    # p_E     = img[y][x + 1]
+    # p_W     = img[y][x - 1]
+    # p_S     = img[y + 1][x]
+    # p_SW    = img[y + 1][x - 1]
+    # p_SE    = img[y + 1][x + 1]
 
     # return the first True due to short
     # circuit
-    return check_pixel(p, p_N, t)  or \
-           check_pixel(p, p_NE, t) or \
-           check_pixel(p, p_NW, t) or \
-           check_pixel(p, p_E, t)  or \
-           check_pixel(p, p_W, t)  or \
-           check_pixel(p, p_S, t)  or \
-           check_pixel(p, p_SW, t) or \
-           check_pixel(p, p_SE, t)
+    return check_pixel(p, img[y - 1][x], t)     or \
+           check_pixel(p, img[y - 1][x + 1], t) or \
+           check_pixel(p, img[y - 1][x - 1], t) or \
+           check_pixel(p, img[y][x + 1], t)     or \
+           check_pixel(p, img[y][x - 1], t)     or \
+           check_pixel(p, img[y + 1][x], t)     or \
+           check_pixel(p, img[y + 1][x - 1], t) or \
+           check_pixel(p, img[y + 1][x + 1], t)
 
 def edge(img, t, bg):
     w, h = len(img[0]), len(img)
