@@ -34,9 +34,6 @@ class Immagine:
 def visd(img, didascalia=''):
     '''Visualizza una immagine in una console IPython seguita da una didascalia opzionale'''
     ipd.display(Immagine(img))
-    #img = png.from_array(img, 'RGB')
-    #b = io.BytesIO()
-    #ipd.display(ipd.Image("rosso.png"))
     if didascalia:
         ipd.display(didascalia)
 

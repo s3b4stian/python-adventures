@@ -1,25 +1,25 @@
 ## ESERCIZI
-#
-#Scrivere le funzioni seguenti.
-#1. prec(g1, m1, a1, g2, m2, a2) ritorna True se la data g1, m1, a1 (giorno, mese, anno) è precedente
+
+# Scrivere le funzioni seguenti.
+# 1. prec(g1, m1, a1, g2, m2, a2) ritorna True se la data g1, m1, a1 (giorno, mese, anno) è precedente
 #   o uguale alla data g2, m2, a2 .
 #   Esempi
 #   prec(13, 11, 2012,  2,  3, 2013)	ritorna	True
 #   prec(13, 11, 2012, 27, 12, 2011)	ritorna	False
 #   prec( 1, 10, 2013,  1, 11, 2013)	ritorna	True
-#
-#2. l2d(lst) che, presa in input una lista lst i cui elementi sono numeri da 0 a 9 espressi in lettere
+
+# 2. l2d(lst) che, presa in input una lista lst i cui elementi sono numeri da 0 a 9 espressi in lettere
 #   ( 'zero' , 'uno' , …, 'nove' ), ritorna una nuova lista i cui elementi sono la traduzione in numeri degli
 #   elementi di lst . Esempio
 #   l2d(['nove','due','due','tre'])	ritorna	[9,2,2,3]
-#
-#3. distinct(lst) ritorna una nuova lista che contiene gli stessi elementi di lst ma senza le eventuali
+
+# 3. distinct(lst) ritorna una nuova lista che contiene gli stessi elementi di lst ma senza le eventuali
 #   ripetizioni.
 #   Esempi
 #   distinct([3,1,3,2,6,6])		ritorna	[3, 1, 2, 6]
 #   distinct(['a','ab','a','ab'])	ritorna	['a', 'ab']
-#
-#4. search(lst, andc, orc, notc) ritorna una nuova lista di stringhe che contiene le stringhe s della lista
+
+# 4. search(lst, andc, orc, notc) ritorna una nuova lista di stringhe che contiene le stringhe s della lista
 #   lst tali che tutte le stringhe della lista andc sono sottostringhe di s, almeno una delle stringhe della
 #   lista orc (se orc non è vuota) è una sottostringa di s e nessuna delle stringhe della lista notc è una
 #   sottostringa di s. 

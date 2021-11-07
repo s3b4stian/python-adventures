@@ -1,43 +1,43 @@
 ## ESERCIZI
-#
-#Scrivere le funzioni seguenti.
-#1. wset(fname) ritorna un insieme contenente le parole (distinte) del file fname . Le parole sono ridotte
+
+# Scrivere le funzioni seguenti.
+# 1. wset(fname) ritorna un insieme contenente le parole (distinte) del file fname . Le parole sono ridotte
 #   alle minuscole e il file è decodificato con UTF-8-SIG. 
 #   Esempio
-#>>> wset('alice.txt') ritorna un insieme di cardinalità 3007
-#
-#2. wsub(fn1, fn2) ritorna un insieme contenente le parole (distinte) che appaiono nel file fn1 e che non
+# >>> wset('alice.txt') ritorna un insieme di cardinalità 3007
+
+# 2. wsub(fn1, fn2) ritorna un insieme contenente le parole (distinte) che appaiono nel file fn1 e che non
 #   appaiono nel file fn2 . Le parole sono ridotte alle minuscole e il file è decodificato con UTF-8-SIG. 
 #   Esempio
-#>>> wsub('alice.txt', 'holmes.txt') ritorna un insieme di cardinalità 710
-#
-#3. wdict(fname) ritorna un dizionario che ad ogni parola del file fname associa il numero di occorrenze
+# >>> wsub('alice.txt', 'holmes.txt') ritorna un insieme di cardinalità 710
+
+# 3. wdict(fname) ritorna un dizionario che ad ogni parola del file fname associa il numero di occorrenze
 #   della parola nel file. Le parole sono ridotte alle minuscole e il file è decodificato con UTF-8-SIG. 
 #   Esempio
-#>>> d = wdict('alice.txt')
-#>>> d['alice'] --> 403
-#>>> d['rabbit'] --> 51
-#>>> d['queen'] --> 75
-#
-#4. nextw(fname) ritorna un dizionario che ad ogni parola del file fname associa l'insieme delle parole che
+# >>> d = wdict('alice.txt')
+# >>> d['alice'] --> 403
+# >>> d['rabbit'] --> 51
+# >>> d['queen'] --> 75
+
+# 4. nextw(fname) ritorna un dizionario che ad ogni parola del file fname associa l'insieme delle parole che
 #   seguono la parola nel file. Le parole sono ridotte alle minuscole e il file è decodificato con UTF-8-SIG.
 #   Esempio
-#>>> d = nextw('alice.txt')
-#>>> d['go']
-#{'and', 'among', 'splashing', 'back', 'down', 'through', 'at', 'in', 'nearer', 'said', 'from', 'for', 
-#'no', 'there', 'to', 'his', 'after', 'let', 'with', 'by', 'on', 'alice', 'near', 'anywhere', 'round'}
-#>>> d['write']
-#{'that', 'this', 'it', 'one', 'with', 'out'}
-#
-#5. mostf(fname, l) ritorna un insieme contenente le parole di lunghezza l di massima frequenza nel file
+# >>> d = nextw('alice.txt')
+# >>> d['go']
+# {'and', 'among', 'splashing', 'back', 'down', 'through', 'at', 'in', 'nearer', 'said', 'from', 'for', 
+# 'no', 'there', 'to', 'his', 'after', 'let', 'with', 'by', 'on', 'alice', 'near', 'anywhere', 'round'}
+# >>> d['write']
+# {'that', 'this', 'it', 'one', 'with', 'out'}
+
+# 5. mostf(fname, l) ritorna un insieme contenente le parole di lunghezza l di massima frequenza nel file
 #   fname . Le parole sono ridotte alle minuscole e il file è decodificato con UTF-8-SIG. 
 #   Esempi
-#>>> mostf('holmes.txt', 7)
-#{'nothing', 'however'}
-#mostf('holmes.txt', 8)
-#{'sherlock'}
-#mostf('frankenstein.txt', 16) 
-#{'unenforceability', 'impracticability', 'perpendicularity', 'indiscriminately', 'inextinguishable'}
+# >>> mostf('holmes.txt', 7)
+# {'nothing', 'however'}
+# mostf('holmes.txt', 8)
+# {'sherlock'}
+# mostf('frankenstein.txt', 16) 
+# {'unenforceability', 'impracticability', 'perpendicularity', 'indiscriminately', 'inextinguishable'}
 
 # utility funcs
 
@@ -160,23 +160,23 @@ def mostf(fname: str, l: int) -> set:
 if __name__ == '__main__':
 
     # ex 1 test
-    print(len(wset('files/alice.txt'))) # print 3007
+    print(len(wset('lec_09_files/alice.txt'))) # print 3007
 
     # ex 2 test
-    print(len(wsub('files/alice.txt', 'files/holmes.txt'))) # print 710
+    print(len(wsub('lec_09_files/alice.txt', 'lec_09_files/holmes.txt'))) # print 710
 
     # ex 3 test
-    d = wdict_1('files/alice.txt')
+    d = wdict_1('lec_09_files/alice.txt')
     print(d['alice']) # print 403
     print(d['rabbit']) # print 51
     print(d['queen']) # print 75
 
     # ex 4 test
-    d = nextw('files/alice.txt')
+    d = nextw('lec_09_files/alice.txt')
     print(d['go']) # print {'and', 'among', 'splashing', 'back', 'down', 'through', 'at', 'in', 'nearer', 'said', 'from', 'for', 'no', 'there', 'to', 'his', 'after', 'let', 'with', 'by', 'on', 'alice', 'near', 'anywhere', 'round'}
     print(d['write']) # print {'that', 'this', 'it', 'one', 'with', 'out'}
 
     # ex 5 test
-    print(mostf('files/holmes.txt', 7)) # print {'nothing', 'however'}
-    print(mostf('files/holmes.txt', 8)) # print {'sherlock'}
-    print(mostf('files/frankenstein.txt', 16)) # print {'unenforceability', 'impracticability', 'perpendicularity', 'indiscriminately', 'inextinguishable'}
+    print(mostf('lec_09_files/holmes.txt', 7)) # print {'nothing', 'however'}
+    print(mostf('lec_09_files/holmes.txt', 8)) # print {'sherlock'}
+    print(mostf('lec_09_files/frankenstein.txt', 16)) # print {'unenforceability', 'impracticability', 'perpendicularity', 'indiscriminately', 'inextinguishable'}

@@ -1,9 +1,9 @@
 ## ESERCIZIO
-#
-#Usando lo schema descritto definite l'algoritmo e il suo pseudo-codice e poi implementate e testate le funzioni e sottofunzioni realizzate.
-#
-#1)  Modificate la funzione aggiorna_k_massimi in modo da usare una lista ordinata invece che disordinata 
-#    e misurate i tempi di esecuzione di k_massimi_casuali in Jupyter col comando %time per K=3000 e K=30 (e S=0, N=1000000).
+
+# Usando lo schema descritto definite l'algoritmo e il suo pseudo-codice e poi implementate e testate le funzioni e sottofunzioni realizzate.
+
+# 1)  Modificate la funzione aggiorna_k_massimi in modo da usare una lista ordinata invece che disordinata 
+#     e misurate i tempi di esecuzione di k_massimi_casuali in Jupyter col comando %time per K=3000 e K=30 (e S=0, N=1000000).
 
 
 # ex. 1
