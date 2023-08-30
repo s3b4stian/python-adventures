@@ -1,0 +1,152 @@
+## Ragionamento
+
+Una volta letto il testo dell'esercizio, ho iniziato a pensare come si potesse
+tradurre in blocchi il primo paragrafo.Il secondo a differenza del primo ha
+fornito una spiegazione molto dettagliata su come attribuire i punti ed è
+stato possibile trasformarlo in pseudo codice con minimo sforzo.
+Il terzo definisce i requisiti della funzione da implementare, il quarto
+fornisce ulteriori informazioni su come si svolge il torneo.
+
+Sintetizzando il tutto abbiamo
+ - torneo con N giocatori
+ - si sfidano 2 giocatori alla volta
+ - durante ogni sfida ci sono N round
+ - ogni giocatore sfida tutti gli altri
+ - classifica in base ai punti ed in base alla posizione
+
+Inizialmente ho pensato subito ad usare 2 for per far sfidare tutti i giocatori
+e un for per i round di ogni sfida. La cosa ha portato velocemente ad una
+soluzione funzionante che ha permesso di passare tutti i test.
+Purtroppo non si tratta della soluzione più peformante in quando ho necessità
+di iterare N * N volte per far sfidare tutti, evitare di ripetere le sfide che
+si sono già presentate ed evitare che un giocatore sfidi se stesso.
+Per evitare di iterare più del necessaro ho optato per l'utilizzo delle
+combinazioni [https://it.wikipedia.org/wiki/Combinazione] costruendo una
+funzione apposita che restituisce una lista di tuple dove ogni tupla contiene
+gli id dei giocatori che si sfidano in quella partita.
+Questa soluzione ha permesso di interare un numero minore di volte rispetto
+ad N * N e di evitare le condizioni per escludere le partire in cui un
+giocare gareggiava contro se stesso e di memorizzare le partite effettuate
+al fine di non ripeterle.
+
+Inizialmente ho suddiviso il codice solamente in una funzione la quale 
+effettuava la partita e calcolava i punteggi.
+Una volta utilizzato il calcolo della combinazione ho inserito apposita 
+funzione ed infine ho deciso di separare il calcolo dei punti e dello
+spareggio.
+
+
+## Pseudocodice
+
+# effettua un match tra due player e decreta
+# un vincitore restituendo i punti dello stesso
+funzione do_match (player_a, player_b, k)
+
+    # aggiungo +1 se player a vince
+    # aggiungo -1 se player b vince
+    - player_points, creo una variabile per i punti di player a e b
+
+    # gioco il round
+    - per ogni ord_a e ord_b in zip di player_a e player_b
+
+        - se ord_a maggiore di ord_b
+            - a player_points aggiungi 1 se ord_a - ord_b <= k altrimenti 
+              aggiungi -1
+
+        - se ord_b maggiore di ord_a
+            - a player_points agginugi -1 se ord_b - ord_a <= k altrimenti 
+              aggiungi 1
+
+    - restituisci player_points
+
+
+# precalcola gli ord di ogni stringa in matches
+# prepara la lista che accoglie i punteggi
+# matches per ["aac","ccc","caa"] diventa
+# [(97, 97, 99), (99, 99, 99), (99, 97, 97)]
+# p_final diventa
+# [(0, 0), (0, 1), (0, 2)]
+funzione create_matches (matches)
+    - m_final, dichiaro la lista finale
+    - p_final, dichiaro la lista dei punteggi finali
+    - per ogni i ed s nelle'enumerate di matches
+          - creo una lista che calcola gli ord per ogni c in s se c non
+            è uno spazio o una tabulaizone
+          - creo una tupla che contiene la lista del punto precedente e 
+            l'indice precedente
+          - inserisco la tupla a in m_final
+          - inserisco una tupla in p_final contenete zero al primo elemento
+            e l'indice i al secondo
+    - restituisco p_final ed m_final
+
+# ottengo una lista di tuple con le combinazione dei matches
+# secondo questo https://en.wikipedia.org/wiki/Combination
+# matches per ["aac","ccc","caa"] diventa che ha 3 elementi genera
+# le seguenti combinazioni
+# [(0, 1), (0, 2), (1, 2)]
+funzione combinations (n)
+    - n, decremento di 1
+    - i, assegno valore 0
+    - j, assegno valore 1
+    - lst, inizializzo lista vuota
+
+    - fintantoché i è minore di n allora
+        - a lst appendi tupla con al primo elemento i e al secondo j
+        - incrementa j di 1
+
+        - se j è maggiore di n allora
+            - incrementa i di 1
+            - assegna a j il valore di i più 1
+
+    - restituisci lst
+
+# restituisce l'id del giocatore che ha vinto la partita
+# in caso di parità restituisce none
+funzione calculate_winner(player_points, player_a_id, player_b_id)
+    - se player_points > 0 restituisci player_a_id
+    - se player points < 0 restituisci player_b_id
+
+    - restituisci None
+
+# restituisce l'id del giocatore a cui è assegnata la partita
+# se il punteggio è risultato pari
+funzione calculate_playoff (player_a_id, player_b_id, tup_a, tup_b)
+    - sum_a, assegno la somma dei valori di tup_a
+    - sum_b, assegno la somma dei valori di tup_b
+
+    - se sum_a < sum_b allora restituisci player_a_id
+
+    # ordine lessicografico, ordine alfabetico
+    # può essere riferito anche all'id del giocatore?
+    # se restituisco il giocatore con id più basso i test funzionano
+    # ugualmente.
+    - se sum_a uguale a sum_b allora restituisci player_b_id se tup_a è
+      maggiore di tup_b altrimenti restituisci player_a_id
+
+    - restituisci player_b_id
+
+funzione ex (matches, k)
+
+    - p_final ed m_final, assegno il risultato della chiamata a funzione
+      create_matches (matches)
+
+    - matches_combination, assegno il risultato della funzione combinations 
+      a cui passo come parametro la lunghezza della lista matches
+
+    # ogni giocatore sfida gli altri
+    - per ogni i e c in matches_combination
+
+        - winner, asegno il valore di ritorno di calculate winner, passando 
+          come primo argomento, il valore restituito da do_match, e come 
+          secondo e terzo gli id dei giocatori che hanno disputato il match
+        - se winner è unguale a None, a winner assegno il valore restituito da
+          calculate_playoff
+        - creo una nuova tupla con due elementi, il primo è il punteggio 
+          precedente incrementato di uno, il secondo il valore di winner
+        - assegno la tupla appena creata a point_final all'indice di winner
+
+    - ordino la lista points_final utilizzando ordine inverso e come chiave
+      per l'ordine l'elemento uno della tupla
+
+    - restituisco una lista dove ogni elemento è l'elemento uno della tupla
+      della lista ordinata di points_final

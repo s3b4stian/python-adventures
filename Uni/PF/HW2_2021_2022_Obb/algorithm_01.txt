@@ -1,0 +1,83 @@
+functione ex (matches, k)
+
+    - matches, rimpiazzo tutti i caratteri spazio
+    - matches, rimpiazzo tutti i caratteri tabulaizone
+
+    - m_len, lunghezza di matches
+
+    - already, dichiaro variabile lista di controllo incotri disputati
+
+    - points_table_final, dichiario dizionario per i risultati, imposto tutto a zero
+
+    # ogni giocatore sfida gli altri
+    - per ogni i nel range di zero e m_len
+        - per ogni c nel range di zero e m_len
+
+            - player_a, assegno il valore di matches all'indice i
+            - player_b, assegno il valore di matches all'indice c
+
+            - se i player sono uguali vado al ciclo successivo
+
+            - se i player sono presenti in alreadi vado al ciclo successivo
+
+            - aggiungo i player alla lista already
+
+            - chiamo la funzione do_match
+              il valore di ritorno equivale alla chiave del dizionario points_table_final
+              incremento di uno il contenuto del dizionario points_table_final 
+              per la chiave ricevuta
+
+    - lst, list comprehension
+      per ogni elemento y e z presente in points_table_final
+      creo una tupla dove il primo elemento è z(punteggio) ed il secondo la
+      posizione di y dentro matches
+
+    - lst_sorted, ordino lst utilizzando ordine inverso e come chiave
+      per l'ordine l'elemento uno della tupla
+
+    - restituisco una lista dove ogni elemento è l'elemento uno della tupla
+      della lista ordinata lst_sorted
+
+function do_match (player_a, player_b, k)
+
+    - tup_a, creo una tupla con i caratteri di player a
+    - tup_b, creo una tupla con i caratteri di player b
+
+    - points_table, creo dizionario per i punti di player a e b
+
+    - seq_a, dichiaro accumulatore per il valore dei caratteri player a
+    - seq_b, dichiaro accumulatore per il valore dei caratteri player b
+
+    # gioco il round
+    - per ogni i nel range di o e lunghezza di tup_a
+
+        - player_a_shot, prendo indice i di tup_a (carattere)
+        - player_b_shot, prendo indice i di tup_b (carattere)
+
+        - ord_a, calcolo il codice unicode di player_a_shot
+        - ord_b, calcolo il codice unicode di player_b_shot
+        - result, differenza tra ord_a e ord_b
+
+        - incremento seq_a e seq_b dei rispettivi ord_a e ord_b
+
+        - se il risultato è negativo, prendo il valore assoluto
+        
+        - se il risultato è inferiore o uguale a k
+            - se ord_a < ord_b assegno punto a player a
+            - se ord_a > ord_b assegno punto a player b
+        - altrimenti
+            - se ord_a > ord_b assegno punto a player a
+            - se ord_a < ord_b assegno punto a player b
+
+    # calcolo il vincitore
+    - se i punti di player a sono maggiori dei punti di player b
+        - restituisci "player_a"
+    - se i punti di player a sono minori dei punti di player b
+        - restituisci "player_b"
+
+    - seq_a minore di seq_b
+        - restituisci "player_a"
+    - seq_a maggiore di seq_b
+        - restituisci "player_b"
+
+    - restituisci il minore in ordine lexografico

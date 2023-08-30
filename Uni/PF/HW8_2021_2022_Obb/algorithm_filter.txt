@@ -1,0 +1,133 @@
+# Intro
+Inizialmente ho pensato di risolvere il tutto generando ogni possibile
+combinazione di colori e stabilire cosi quali fossero le righe da abbinare.
+
+Ad esempio se consideriamo i seguinti input
+
+```
+colors = [0, 255]
+D = 2
+```
+
+Le righe da abbinare sarebbero queste
+
+```
+[[0, 0],[0, 255],[255, 0],[255, 255]]
+```
+
+Sfortunatamente questo metodo, ha portato, malgrado le ottimizzazioni usate,
+al passare tutti i test eccetto uno. E' risultato purtroppo difficile applicare
+una buona strategia di filtri alle righe. Al salire delle dimensione di colors
+e di D l'algoritmo non scalava bene.
+
+Ho iniziato nuovamente da capo utilizzando il metodo pixel a pixel, al posto
+di un'intera riga da aggiungere alla matrice, sono passato ad un pixel alla
+volta. I filtri si sono rilevati più semplici da implementare ed a differenza
+del precedente metodo non richiedevano cicli, solo una serie di if.
+
+Il codice lo ho strutturato nel seguente modo, diviso in più funzioni.
+
+Allo stato attuale non ho utilizzato un albero di gioco, solo semplice
+ricorsione.
+
+# Algoritmo
+
+
+## funzione filter_diff()
+    - ricevo in ingresso
+        - matrice
+        - colore
+        - posizione in cui dovrà essere inserito il nuovo pixel
+
+    - controllo se il pixel precedente è uguale
+    - controllo se i pixel attorno sono uguali
+
+
+## funzione filter_cross()
+    - ricevo in ingresso
+        - matrice
+        - colore
+        - posizione in cui dovrà essere inserito il nuovo pixel
+
+    - controllo se il pixel precedente è uguale
+    - controllo se i pixel sopra e in diagonale sono uguali
+
+
+## funzione filter_hrect()
+    - ricevo in ingresso
+        - matrice
+        - colore
+        - posizione in cui dovrà essere inserito il nuovo pixel
+
+    - controllo se il pixel precedente è diverso
+    - controllo se il pixel sopra è uguale
+
+
+## funzione filter_vrect()
+    - ricevo in ingresso
+        - matrice
+        - colore
+        - posizione in cui dovrà essere inserito il nuovo pixel
+
+    - controllo se il pixel precedente è uguale
+    - controllo se il pixel sopra è diverso
+
+
+Per le quattro funzioni sopra elencate:
+    - Ogni controllo esclude gli altri e viene fatto il base alla posizione del
+      pixel all'interno della matrice.
+    - La funzione restituisce falso se nessuno dei controlli è soddisfatto ed 
+      il pixel può essere effettivamente inserito nella matrice.
+
+
+## funzione gen_matrix_pattern()
+    - ricevo in ingresso
+        - i colori
+        - le posizioni della matrice
+        - una matrice vuota
+        - la dimensione della matrice
+        - una lista per contenere le matrici generate
+        - un valore intero ad indicare il livello di ricorsione raggiunto
+        - una funzione da utilizzare come filtro per il pattern
+
+    - estraggo la posizione corrente dalla lista delle posizioni della matrice
+    - pero ogni colore
+        - controllo se il colore rispetta il pattern tramite l'apposita 
+          funzione
+        - assegno alla matrice il colore corrente alla posizione ricavata in
+          precedenza
+        - se il livello di ricorsione è uguale alla dimensione della matrice
+            - appendo la matrice alla lista di matrici
+        - altrimenti
+            - vado in ricorsione aumetando il valore del livello e passando
+              la matrice con il pixel aggiunto
+
+
+## funzione gen_matrix()
+    - ricevo in ingresso
+        - i colori
+        - le posizioni della matrice
+        - una matrice vuota
+        - la dimensione della matrice
+        - una lista per contenere le matrici generate
+        - un valore intero ad indicare il livello di ricorsione raggiunto
+
+    - estraggo la posizione corrente dalla lista delle posizioni della matrice
+    - pero ogni colore
+        - assegno alla matrice il colore corrente alla posizione ricavata in
+          precedenza
+        - se il livello di ricorsione è uguale alla dimensione della matrice
+            - appendo la matrice alla lista di matrici
+        - altrimenti
+            - vado in ricorsione aumetando il valore del livello e passando
+              la matrice con il pixel aggiunto
+
+
+## funzione ex()
+    - in base a D genero la lista di tutte le posizioni all'interno della
+      matrice
+    - creo un dizionario contenente come chiavi le stringhe dei quattro
+      pattern e per ogni chiave la funzione che filtra per quello specifico
+      pattern
+    - se img_properties ha un valore chiamo la funzione gen_matrix_pattern
+      altrimenti la funzione gen_matrix

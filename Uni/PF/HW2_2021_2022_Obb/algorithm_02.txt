@@ -1,0 +1,99 @@
+funzione do_match (player_a, player_b, k)
+
+    # aggiungo +1 se player a vince
+    # aggiungo -1 se player b vince
+    - player_points, creo una variabile per i punti di player a e b
+
+    - seq_a, assegno somma dei caratteri player a prensente ad indice 1
+    - seq_b, assegno somma dei caratteri player b prensente ad indice 1
+
+    # gioco il round
+    - per ogni i nel range di o e lunghezza di player_a ad indice 0
+
+        - ord_a, assegno valore presente in player_a ad indice 0 indice i
+        - ord_b, assegno valore presente in player_b ad indice 0 indice i
+
+        - se ord_a uguale ad ord_b, vai alla prossima iterazione
+
+        - se ord_a maggiore ord_b
+            - controlla se la differenza tra ord_a ed ord_b è inferiore o uguale a k
+                - se si aggiungi 1 ad player_points e vai alla prossima iterazione
+            - leva 1 a player_points e vai alla prossima iterazione
+
+        - controlla se la differenza tra ord_b ed ord_a è inferiore o uguale a k
+            - se si leva 1 ad player_points e vai alla prossima iterazione
+        
+        - aggiungi 1 a player_points e vai alla prossima iterazione
+
+    # calcolo il vincitore
+    - se player_points è maggiore di 0
+        - restituisci player_a ad indice 2
+
+    - se player_points è minore di 0
+        - restituisci player_b ad indice 2
+
+    - se seq_a minore di seq_b
+        - restituisci player_a ad indice 2
+
+    - se seq_a uguale di seq_b
+        - restituisci il minore in ordine lexografico
+        
+    - restituisci player_ba ad indice 2
+
+
+# precalcola gli ord e la somma di ogni stringa in
+# matches
+# prepara la lista che accoglie i punteggi
+# matches per ["aac","ccc","caa"] diventa
+# [((97, 97, 99), 293, 0), ((99, 99, 99), 297, 1), ((99, 97, 97), 293, 2)]
+# p_final diventa
+# [(0, 0), (0, 1), (0, 2)]
+funzione create_matches (matches)
+    
+    - m_final, dichiaro la lista finale
+    - p_final, dichiaro la lista dei punteggi finali
+    - per ogni i ed s nelle'enumerate di matches
+          - creto una lista che calcola gli ord per ogni c in s se c non
+            è uno spazio o una tabulaizone
+          - creo una tupla che contiene la lista del punto precedente,
+            la somma degli ord e l'indice precedente
+          - inserisco la tupla a in m_final
+          - inserisco una tupla in p_final contenete zero al primo elemento
+            e l'indice i al secondo
+    - restituisco p_final ed m_final
+
+funzione ex (matches, k)
+
+    - p_final ed m_final, assegno il risultato della chiamata a funzione
+      create_matches (matches)
+
+    - m_len, lunghezza di matches
+
+    - already, dichiaro variabile lista di controllo incotri disputati
+
+    # ogni giocatore sfida gli altri
+    - per ogni i nel range di zero e m_len
+        - per ogni c nel range di zero e m_len
+
+            - se i player sono uguali vado al ciclo successivo
+
+            - se i player sono presenti in alreadi vado al ciclo successivo
+
+            - aggiungo i player alla lista already
+
+            - chiamo la funzione do_match passando tre parametri: matches 
+              per l'indice i e c, e k
+              il valore di ritorno equivale all'indice della lista points_final
+            - creo una nuova tupla con due elementi, il primo è il punteggio precedente
+              incrementato di uno, il secondo l'indice ricevuto dalla funzion do_match
+              incremento di uno il contenuto del della tupla points_table_final 
+            - assegno la tupla appena creata a point_final alla posizione dell'indice
+              restituito dalla funzione do_match
+
+    - ordino la lista points_final utilizzando ordine inverso e come chiave
+      per l'ordine l'elemento uno della tupla
+
+    - restituisco una lista dove ogni elemento è l'elemento uno della tupla
+      della lista ordinata di points_final
+
+

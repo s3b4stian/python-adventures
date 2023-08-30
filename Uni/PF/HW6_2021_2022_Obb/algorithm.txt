@@ -1,0 +1,88 @@
+# Intro
+Ho dato uno sguardo veloce al testo, senza entrare però nei dettagli, sono
+state maggiormente d'aiuto le immagini d'esempio presenti nella cartella dei
+test.
+Visto il risultato finale atteso, ho iniziato a scrivere il codice per 
+ottenere una prima versione funzionante indipendentemente da complessità e 
+velocità.
+Successivamente ho iniziato il refactoring, mirato maggiormente ad ottenere
+una bassa complessità.
+Il codice finale al momento è suddiviso nel modo descritto di seguito.
+
+# Algoritmo
+
+## classe Point
+    Attributi
+    - x
+    - y
+
+
+## class Building
+    Attributi
+    - sw
+    - color
+    - h
+    - w
+
+
+## funzione draw_inner()
+    - estraggo i dati del palazzo che intendo disegnare nel layer finale
+    - disegno il palazzo partendo da angolo di sud ovest
+
+
+## funzione create_layer()
+    - restituisco una lista di liste rappresentante il layer finale
+
+
+## funzione get_buildings_file()
+    - apro il file e per ogni riga
+        - faccio lo split per virgola e lo strip dei caratteri spazio e tab
+        - converto tutti i valori da stringa ad intero
+    - restituisco una lista di tuple, dove ogni tupla è una riga di palazzi ed
+      al suo interno ha N tuple di 5 valori, una ogni palazzo
+
+
+## funzione get_buildings_properties()
+    - restituisco due list comprehension come tupla, le due liste contengono
+      la prima le w e la seconda le h di tutti i palazzi
+
+
+## funzione get_buildings_measures()
+    - per ogni riga di palazzi
+        - prendo i valori di w ed h di ogni palazzo tramite la funzione
+          get_buildings_properties
+        - calcolo la somma di tutte le w
+        - conto i palazzi nella riga
+        - prendo l'altezza massima dela riga
+        - inserisco i tre valori precedenti in una lista passata come
+          argomento
+        - popolo le liste per determinare w ed h del layer finale
+
+
+## funzione draw_buildings_row()
+    - per ogni palazzo presente nella riga
+        - calcolo una nuova y per centrare verticalmente
+        - chiamo la funzione draw_inner passano come argomenti una nuova
+          istanza della classe Building e il layer finale
+        - aggiorno la x e resetto la y per la successiva iterazione
+
+
+## funzione ex()
+    - estraggo i dati dei palazzi dal file_dati passato come argomento
+    - precalcolo le misure necessarie di tutti i palazzi con la funzione
+      get_buildings_measures
+    - calcolo la dimensione massima w dell'immagine finale
+    - tengo conto della riga che determina la dimensione massima in w
+    - calcolo la dimensione massima h dell'immagine finale
+    - creo la matrice per l'immgine finale e la riempio con tuple di tre zeri
+    - dichiaro la y di partenza
+    - per ogni riga di palazzi
+        - prendo le misure necessarie, somma di tutte le w, numero di palazzi
+          e altezza massima tra i palazzi
+        - imposto la x e la y iniziali per la riga
+        - se nella riga è presente solo un palazzo, lo disegno al centro e
+          passo all'iterazione successiva
+      # - se la riga di palazzi è diversa dalla riga che ha determinato la 
+      #   dimensione w finale dell'immagine allora ricalcolo la spaziatura tra
+      #   i plazzi
+        - disegno la riga di palazzi tramite le funzione draw_buildings_row
